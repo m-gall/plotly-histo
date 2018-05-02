@@ -8,7 +8,6 @@ from plotly.graph_objs import Scatter, Layout
 
 
 def parse_data(filename1, filename2, filename3):
-
     data_combined = []
     non_zeros_combined = []
     samples_combined = []
@@ -45,35 +44,33 @@ def parse_data(filename1, filename2, filename3):
     return [non_zeros_combined, data_combined, samples_combined]
 
 
-def generate_histo(non_zeros1, nonzeros2, nonzeros3):
-
-    trace1 = go.Histogram(x=non_zeros1)
-    trace2 = go.Histogram(x=nonzeros2)
-    trace3 = go.Histogram(x=nonzeros3)
+def generate_histo(non_zeros1, nonzeros2, nonzeros3, f1, f2, f3):
+    trace1 = go.Histogram(x=non_zeros1, name=f1)
+    trace2 = go.Histogram(x=nonzeros2, name=f2)
+    trace3 = go.Histogram(x=nonzeros3, name=f3)
 
     data = [trace1, trace2, trace3]
 
     return data
 
 
-def get_layout_attributes(plot_title, xlabel, ylabel):
-    layout = go.Layout(
-        title=plot_title,
-        xaxis=dict(
-            title=xlabel
-        ),
-        yaxis=dict(
-            title=ylabel
-        ),
-        bargap=0,
-        bargroupgap=0
-    )
+def get_layout_attributes(plot_title, xçlabel, ylabel):
+    layout = go.Layout(showlegend=True,
+                       title=plot_title,
+                       xaxis=dict(
+                           title=plot_xlabel
+                       ),
+                       yaxis=dict(
+                           title=plot_ylabel
+                       ),
+                       bargap=0,
+                       bargroupgap=0
+                       )
 
     return layout
 
 
 def generate_heatmap(non_zeros, samples):
-
     trace = go.Heatmap(z=non_zeros,
                        x=samples,
                        y=samples, colorscale='Greys')
@@ -82,22 +79,25 @@ def generate_heatmap(non_zeros, samples):
     return data
 
 
-
 if __name__ == '__main__':
 
     print('Program to plot histogram of merged cnvs')
 
-    parameters = sys.argv
-    argc = len(parameters)
-    if argc != 2:
-        print("Usage: <input tsv file name>")
-        sys.exit(0)
+    # parameters = sys.argv
+    # argc = len(parameters)
+    # if argc != 2:
+    #     print("Usage: <input tsv file name>")
+    #     sys.exit(0)
 
     non_zeros = []
-    filename = sys.argv[1]
+  #  filename = sys.argv[1]
     filename1 = 'data/mmr-fcctx-adjusted-merged-canon.tsv'
     filename2 = 'data/fcctx-adjust-merged-canon.tsv'
     filename3 = 'data/mmr-adjust-merged-canon.tsv'
+
+    label1=filename1[5:]
+    label2=filename2[5:]
+    label3=filename3[5:]
 
     outfilename = 'mmr_fcctx_snp_histo.html'
 
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     zeros = tempdata[1]
     samples = tempdata[2]
 
-    data_histo = generate_histo(non_zeros[0], non_zeros[1], non_zeros[2])
+    data_histo = generate_histo(non_zeros[0], non_zeros[1], non_zeros[2], label1, label2, label3)
 
     layout = get_layout_attributes(plot_title, plot_xlabel, plot_ylabel)
 
